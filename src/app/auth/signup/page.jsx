@@ -2,8 +2,12 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { auth } from "@/lib/firebase";
-import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
+import { auth, googleProvider } from "@/lib/firebase";
+import {
+  createUserWithEmailAndPassword,
+  signInWithPopup,
+  updateProfile,
+} from "firebase/auth";
 
 export default function SignupPage() {
   const [username, setUsername] = useState("");
@@ -28,6 +32,19 @@ export default function SignupPage() {
       setUsername("");
       setEmail("");
       setPassword("");
+      router.push("/");
+    } catch (error) {
+      console.error("Error signing up:", error);
+      setError(error.message);
+    }
+  };
+
+  // Handle sign up with google
+  const handleGoogleSignup = async (e) => {
+    e.preventDefault();
+    try {
+      const result = await signInWithPopup(auth, googleProvider);
+      console.log("Google sign in: success", result.user);
       router.push("/");
     } catch (error) {
       console.error("Error signing up:", error);
@@ -64,6 +81,7 @@ export default function SignupPage() {
         />
         <button type="submit">Sign Up</button>
       </form>
+      <button onClick={handleGoogleSignup}>Sign Up with Google</button>
       {error && <p style={{ color: "red" }}>{error}</p>}
     </div>
   );

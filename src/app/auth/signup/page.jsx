@@ -14,12 +14,14 @@ export default function SignupPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
   const router = useRouter();
 
   // Handle user signups when the form is submitted
   const handleSignup = async (e) => {
     e.preventDefault();
     setError("");
+    setLoading(true);
     try {
       // Creates a new user with firebase auth using email and password
       const userCredential = await createUserWithEmailAndPassword(
@@ -36,12 +38,15 @@ export default function SignupPage() {
     } catch (error) {
       console.error("Error signing up:", error);
       setError(error.message);
+    } finally {
+      setLoading(false);
     }
   };
 
   // Handle sign up with google
-  const handleGoogleSignup = async (e) => {
-    e.preventDefault();
+  const handleGoogleSignup = async () => {
+    setError("");
+    setLoading(true);
     try {
       const result = await signInWithPopup(auth, googleProvider);
       console.log("Google sign in: success", result.user);
@@ -49,6 +54,8 @@ export default function SignupPage() {
     } catch (error) {
       console.error("Error signing up:", error);
       setError(error.message);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -79,9 +86,13 @@ export default function SignupPage() {
           required
           autoComplete="new-password"
         />
-        <button type="submit">Sign Up</button>
+        <button type="submit" disabled={loading}>
+          {loading ? "Signing Up..." : "Sign Up"}
+        </button>
       </form>
-      <button onClick={handleGoogleSignup}>Sign Up with Google</button>
+      <button onClick={handleGoogleSignup} disabled={loading}>
+        {loading ? "Signing Up..." : "Sign Up"}
+      </button>
       {error && <p style={{ color: "red" }}>{error}</p>}
     </div>
   );

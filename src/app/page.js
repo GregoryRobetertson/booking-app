@@ -1,9 +1,11 @@
-import Image from "next/image";
+import TestAuth from "@/components/TextAuth";
 
 export default function Home() {
   return (
     <>
-      <main></main>
+      <main>
+        <h1>Welcome</h1>
+      </main>
     </>
   );
 }

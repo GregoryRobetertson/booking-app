@@ -19,20 +19,12 @@ A full stack booking system built with Next.js, MongoDB, Firebase, and Tailwind 
 
 ## Troubleshooting
 
-### MongoDB Connection Error: `querySrv ENOTFOUND _mongodb._tcp.undefined.mongodb.net`
+### Error: Cannot find module './models/User'
 
-**Cause:** `.env` file had `MONGODB_URI=MONGODB_URI=...` instead of `MONGODB_URI=...`
+**Cause:** Incorrect import path  
+**Fix:** Update to `require('./src/models/User')`
 
-**Fix:** Remove duplicate key and ensure URI is correct.
+### Bug: User emails saved with whitespace
 
----
-
-### Module Not Found: `Cannot find module './models/User'`
-
-**Cause:** Incorrect import path — `User.js` is in `src/models`, not root.
-
-**Fix:** Update import to:
-
-```js
-const User = require("./src/models/User");
-```
+**Cause:** Missing `.trim()` in schema  
+**Fix:** Add `trim: true` to `email` and `name` fields in `User.js`

@@ -20,4 +20,4 @@ router.post("/", createBookings);
 router.get("/my-bookings", getMyBookings);
 router.get("/:id", getBookingsById);
 router.delete("/:id", cancelBookings);
-module.export = router;
+module.exports = router;

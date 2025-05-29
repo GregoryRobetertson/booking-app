@@ -1,12 +1,19 @@
 const express = require("express");
+const mongoose = require("mongoose");
+const dotenv = require("dotenv");
+const authRoutes = require("./src/server/routes/auth");
+const bookingRoutes = require("./src/server/routes/bookingRoutes");
+
+dotenv.config();
 const app = express();
-
-const bookingRoutes = require("./src/routes/bookingRoutes");
-
 app.use(express.json());
+
+app.use("/api/auth", authRoutes);
 app.use("/api/bookings", bookingRoutes);
 
-const PORT = process.env.PORT || 5000;
-app.listen(5000, () => {
-  console.log(`Running on port ${PORT}`);
-});
+mongoose
+  .connect(process.env.MONGODB_URI)
+  .then(() => {
+    app.listen(process.env.PORT || 5000, () => console.log("Server running"));
+  })
+  .catch((err) => console.error(err));

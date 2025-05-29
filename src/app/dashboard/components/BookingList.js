@@ -1,7 +1,6 @@
 "use client";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
-
 export default function BookingList() {
   const [bookings, setBookings] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -9,16 +8,17 @@ export default function BookingList() {
 
   useEffect(() => {
     const fetchBookings = async () => {
+      const token = localStorage.getItem("token");
+      if (!token) {
+        console.error("No token found, please login.");
+        return;
+      }
       try {
-        const token = localStorage.getItem("token");
-        const res = await axios.get(
-          "http://localhost:5000/api/bookings/my-bookings",
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
+        const res = await axios.get("/api/bookings/my-bookings", {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
         setBookings(res.data);
       } catch (err) {
         console.error(err);

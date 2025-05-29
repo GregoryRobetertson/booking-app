@@ -2,18 +2,24 @@ const Booking = require("../models/Booking");
 
 // @desc create a new booking
 // @route Post /api/bookings
-// @access private
-exports.createBookings = async (req, res) => {
+const createBooking = async (req, res) => {
   try {
-    const { service, date } = req.body;
-    if (!service || !date) {
-      return res.status(400).json({ message: "Service and date are required" }); // Changed "is" to "are"
+    const { serviceType, date, timeSlot, notes } = req.body;
+
+    if (!serviceType || !date || !timeSlot) {
+      return res
+        .status(400)
+        .json({ message: "Service type, date, and time slot are required" });
     }
+
     const booking = await Booking.create({
       user: req.user.id,
-      service,
+      serviceType,
       date,
+      timeSlot,
+      notes,
     });
+
     res.status(201).json(booking);
   } catch (error) {
     console.error("Error creating booking", error);
@@ -23,11 +29,10 @@ exports.createBookings = async (req, res) => {
 
 // @desc find all users bookings
 // @route Get /api/my-bookings
-// @access private
-exports.getMyBookings = async (req, res) => {
+const getMyBookings = async (req, res) => {
   try {
-    const bookings = await Booking.find({ user: req.user.id }); // Corrected field name to 'user'
-    res.status(200).json(bookings); // Return the actual bookings
+    const bookings = await Booking.find({ user: req.user.id });
+    res.status(200).json(bookings);
   } catch (error) {
     console.error("Failed to find user bookings", error);
     res.status(500).json({ message: "Server Error" });
@@ -36,8 +41,7 @@ exports.getMyBookings = async (req, res) => {
 
 // @desc find user bookings by id
 // @route Get /api/bookings/:id
-// @access private
-exports.getBookingsById = async (req, res) => {
+const getBookingsById = async (req, res) => {
   try {
     const booking = await Booking.findById(req.params.id);
     if (!booking) {
@@ -58,8 +62,7 @@ exports.getBookingsById = async (req, res) => {
 
 // @desc cancel bookings
 // @route delete /api/bookings/:id
-// @access private
-exports.cancelBookings = async (req, res) => {
+const cancelBookings = async (req, res) => {
   try {
     const booking = await Booking.findById(req.params.id);
     if (!booking) {
@@ -70,11 +73,13 @@ exports.cancelBookings = async (req, res) => {
         .status(403)
         .json({ message: "Not authorized to cancel this booking" });
     }
+
     booking.status = "Cancelled";
     await booking.save();
+
     res
       .status(200)
-      .json({ message: "Booking cancelled successfully", booking }); // Include the updated booking in the response
+      .json({ message: "Booking cancelled successfully", booking });
   } catch (error) {
     console.error("Error cancelling booking", error);
     if (error.name === "CastError") {
@@ -84,9 +89,8 @@ exports.cancelBookings = async (req, res) => {
   }
 };
 
-// This is cleaner for exporting multiple functions
 module.exports = {
-  createBookings,
+  createBooking,
   getMyBookings,
   getBookingsById,
   cancelBookings,

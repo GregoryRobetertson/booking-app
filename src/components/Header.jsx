@@ -1,35 +1,123 @@
-import React from "react";
-import Container from "react-bootstrap/Container";
-import Nav from "react-bootstrap/Nav";
-import Navbar from "react-bootstrap/Navbar";
-import NavDropdown from "react-bootstrap/NavDropdown";
+"use client";
+import Link from "next/link";
+import React, { useState } from "react";
 
 export default function Header() {
+  const [isOpen, setIsOpen] = useState(false);
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+
   return (
-    <Navbar expand="lg" className="bg-body-tertiary">
-      <Container>
-        <Navbar.Brand href="#home">React-Bootstrap</Navbar.Brand>
-        <Navbar.Toggle aria-controls="basic-navbar-nav" />
-        <Navbar.Collapse id="basic-navbar-nav">
-          <Nav className="me-auto">
-            <Nav.Link href="#home">Home</Nav.Link>
-            <Nav.Link href="#/auth/login">Login</Nav.Link>
-            <NavDropdown title="Dropdown" id="basic-nav-dropdown">
-              <NavDropdown.Item href="/dashboard/book/booking-form">
-                Book Appointment
-              </NavDropdown.Item>
-              <NavDropdown.Item href="/dashboard/book/booking-list">
-                View Appointments
-              </NavDropdown.Item>
-              <NavDropdown.Item href="#action/3.3">Something</NavDropdown.Item>
-              <NavDropdown.Divider />
-              <NavDropdown.Item href="#action/3.4">
-                Separated link
-              </NavDropdown.Item>
-            </NavDropdown>
-          </Nav>
-        </Navbar.Collapse>
-      </Container>
-    </Navbar>
+    <header className="bg-white shadow">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="flex justify-between h-16 items-center">
+          <div className="flex-shrink-0">
+            <Link href="/" className="text-xl font-bold text-gray-800">
+              My App
+            </Link>
+          </div>
+          <div className="lg:hidden">
+            <button
+              onClick={() => setIsOpen(!isOpen)}
+              className="text-gray-800 focus:outline-none"
+            >
+              ☰
+            </button>
+          </div>
+          <nav className="hidden lg:flex space-x-4">
+            <Link href="/" className="text-gray-700 hover:text-black">
+              Home
+            </Link>
+            <Link href="/auth/login" className="text-gray-700 hover:text-black">
+              Login
+            </Link>
+            <div className="relative">
+              <button
+                onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+                className="text-gray-700 hover:text-black"
+              >
+                Dropdown ▼
+              </button>
+              {isDropdownOpen && (
+                <div className="absolute mt-2 bg-white border shadow rounded z-10 w-48">
+                  <Link
+                    href="/dashboard/book/booking-form"
+                    className="block px-4 py-2 hover:bg-gray-100"
+                  >
+                    Book Appointment
+                  </Link>
+                  <Link
+                    href="/dashboard/book/booking-list"
+                    className="block px-4 py-2 hover:bg-gray-100"
+                  >
+                    View Appointments
+                  </Link>
+                  <Link
+                    href="#action/3.3"
+                    className="block px-4 py-2 hover:bg-gray-100"
+                  >
+                    Something
+                  </Link>
+                  <hr />
+                  <Link
+                    href="#action/3.4"
+                    className="block px-4 py-2 hover:bg-gray-100"
+                  >
+                    Separated Link
+                  </Link>
+                </div>
+              )}
+            </div>
+          </nav>
+        </div>
+        {isOpen && (
+          <div className="lg:hidden mt-2 space-y-2">
+            <Link href="/" className="block text-gray-700 hover:text-black">
+              Home
+            </Link>
+            <Link
+              href="/auth/login"
+              className="block text-gray-700 hover:text-black"
+            >
+              Login
+            </Link>
+            <button
+              onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+              className="block w-full text-left text-gray-700 hover:text-black"
+            >
+              Dropdown ▼
+            </button>
+            {isDropdownOpen && (
+              <div className="pl-4">
+                <Link
+                  href="/dashboard/book/booking-form"
+                  className="block py-1 text-gray-600 hover:text-black"
+                >
+                  Book Appointment
+                </Link>
+                <Link
+                  href="/dashboard/book/booking-list"
+                  className="block py-1 text-gray-600 hover:text-black"
+                >
+                  View Appointments
+                </Link>
+                <Link
+                  href="#action/3.3"
+                  className="block py-1 text-gray-600 hover:text-black"
+                >
+                  Something
+                </Link>
+                <hr />
+                <Link
+                  href="#action/3.4"
+                  className="block py-1 text-gray-600 hover:text-black"
+                >
+                  Separated Link
+                </Link>
+              </div>
+            )}
+          </div>
+        )}
+      </div>
+    </header>
   );
 }

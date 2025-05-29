@@ -6,6 +6,7 @@ const bookingRoutes = require("./src/routes/bookingRoutes");
 app.use(express.json());
 app.use("/api/bookings", bookingRoutes);
 
-app.listen(3000, () => {
-  console.log("Running on port 3000");
+const PORT = process.env.PORT || 5000;
+app.listen(5000, () => {
+  console.log(`Running on port ${PORT}`);
 });

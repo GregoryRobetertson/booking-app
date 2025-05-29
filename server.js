@@ -8,6 +8,14 @@ dotenv.config();
 const app = express();
 app.use(express.json());
 
+app.use(
+  cors({
+    origin: "http://localhost:3000", // frontend URL
+    methods: ["GET", "POST", "PUT", "DELETE"],
+    credentials: true, // if you use cookies or auth headers
+  })
+);
+
 app.use("/api/auth", authRoutes);
 app.use("/api/bookings", bookingRoutes);
 

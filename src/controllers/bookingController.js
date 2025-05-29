@@ -3,13 +3,13 @@ const Booking = require("../models/Booking");
 // @desc create a new booking
 // @route Post /api/bookings
 // @access private
-exports.createbookings = async (req, res) => {
+exports.createBookings = async (req, res) => {
   try {
     const { service, date } = req.body;
     if (!service || !date) {
-      res.status(400).json({ message: "Service and date is required" });
+      return res.status(400).json({ message: "Service and date are required" }); // Changed "is" to "are"
     }
-    const bookings = await Booking.create({
+    const booking = await Booking.create({
       user: req.user.id,
       service,
       date,
@@ -26,8 +26,8 @@ exports.createbookings = async (req, res) => {
 // @access private
 exports.getMyBookings = async (req, res) => {
   try {
-    const bookings = await Booking.find({ User: req.user.id });
-    res.status(200).json({ message: "Found user bookings" });
+    const bookings = await Booking.find({ user: req.user.id }); // Corrected field name to 'user'
+    res.status(200).json(bookings); // Return the actual bookings
   } catch (error) {
     console.error("Failed to find user bookings", error);
     res.status(500).json({ message: "Server Error" });
@@ -35,48 +35,59 @@ exports.getMyBookings = async (req, res) => {
 };
 
 // @desc find user bookings by id
-// @route Get /api/:id
-// access private
+// @route Get /api/bookings/:id
+// @access private
 exports.getBookingsById = async (req, res) => {
   try {
     const booking = await Booking.findById(req.params.id);
     if (!booking) {
-      res.status(404).json({ message: "Booking Not Found" });
+      return res.status(404).json({ message: "Booking Not Found" });
     }
-    if (booking.user.toString() !== req.user.id);
-    res.status(403).json({ message: "Not Authorized" });
+    if (booking.user.toString() !== req.user.id) {
+      return res.status(403).json({ message: "Not Authorized" });
+    }
     res.status(200).json(booking);
   } catch (error) {
     console.error("Error getting booking by ID", error);
-    res.status(500).json({ message: "Error server" });
+    if (error.name === "CastError") {
+      return res.status(400).json({ message: "Invalid booking ID format" });
+    }
+    res.status(500).json({ message: "Server error" });
   }
 };
 
 // @desc cancel bookings
-// @route delete /api/:id
+// @route delete /api/bookings/:id
 // @access private
-
 exports.cancelBookings = async (req, res) => {
   try {
     const booking = await Booking.findById(req.params.id);
     if (!booking) {
       return res.status(404).json({ message: "Booking Not Found" });
-      if (booking.user.toString() !== res.user.id);
-      res
+    }
+    if (booking.user.toString() !== req.user.id) {
+      return res
         .status(403)
         .json({ message: "Not authorized to cancel this booking" });
     }
     booking.status = "Cancelled";
     await booking.save();
+    res
+      .status(200)
+      .json({ message: "Booking cancelled successfully", booking }); // Include the updated booking in the response
   } catch (error) {
     console.error("Error cancelling booking", error);
+    if (error.name === "CastError") {
+      return res.status(400).json({ message: "Invalid booking ID format" });
+    }
     res.status(500).json({ message: "Server error" });
   }
 };
 
+// This is cleaner for exporting multiple functions
 module.exports = {
-  createBooking,
+  createBookings,
   getMyBookings,
-  getBookingById,
-  cancelBooking,
+  getBookingsById,
+  cancelBookings,
 };

@@ -3,6 +3,8 @@ const Booking = require("../models/Booking");
 // @desc create a new booking
 // @route Post /api/bookings
 const createBooking = async (req, res) => {
+  console.log("Received booking:", req.body);
+  console.log("User info from token:", req.user);
   try {
     const { serviceType, date, timeSlot, notes } = req.body;
 

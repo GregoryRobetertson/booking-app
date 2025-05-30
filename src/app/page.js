@@ -4,9 +4,7 @@ export default function Home() {
   return (
     <>
       <Header />
-      <main>
-        <h1>Welcome</h1>
-      </main>
+      <main></main>
     </>
   );
 }

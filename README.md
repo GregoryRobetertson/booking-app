@@ -29,6 +29,14 @@ A full stack booking system built with Next.js, MongoDB, Firebase, and Tailwind 
 **Cause:** Missing `.trim()` in schema  
 **Fix:** Add `trim: true` to `email` and `name` fields in `User.js`
 
-### Finish userRouth.js
+### `NavDropdown is not defined`
 
-###
+**Cause:**  
+`NavDropdown` was used in the `Header` component but was not imported properly.
+
+**Fix:**  
+Added the correct import:
+
+```js
+import { NavDropdown } from "react-bootstrap";
+```

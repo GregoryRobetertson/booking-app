@@ -1,41 +1,130 @@
 "use client";
-import React from "react";
-import { Nav, NavDropdown } from "react-bootstrap";
-import Container from "react-bootstrap/Container";
-import Navbar from "react-bootstrap/Navbar";
+import { getAuth, onAuthStateChanged, signOut } from "firebase/auth";
+import Link from "next/link";
+import React, { useEffect, useState } from "react";
+import app from "../lib/firebase";
 
+const auth = getAuth(app);
+
+const navLinks = [
+  { href: "#home", label: "Home" },
+  { href: "/dashboard/book/booking-form", label: "Book Now" },
+  { href: "/dashboard/book/booking-list", label: "View Appointment" },
+];
 export default function Header() {
-  console.log("NavDropdown:", NavDropdown);
+  const [menuOpen, setMenuOpen] = useState(false);
+  const [user, setUser] = useState(null);
+
+  useEffect(() => {
+    const auth = getAuth(app);
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      setUser(user);
+    });
+  });
+
+  const handleLogout = async () => {
+    try {
+      await signOut(auth);
+    } catch (error) {
+      console.error("Error logging out", error);
+    }
+  };
+
   return (
-    <>
-      <Navbar expand="lg" className="bg-body-tertiary">
-        <Container>
-          <Navbar.Brand href="#home">React-Bootstrap</Navbar.Brand>
-          <Navbar.Toggle aria-controls="basic-navbar-nav" />
-          <Navbar.Collapse id="basic-navbar-nav">
-            <Nav className="me-auto">
-              <Nav.Link href="#home">Home</Nav.Link>
-              <Nav.Link href="/dashboard/book/booking-form">Book Now</Nav.Link>
-              <Nav.Link href="/dashboard/book/booking-list">
-                View Appointment
-              </Nav.Link>
-              <NavDropdown title="Dropdown" id="basic-nav-dropdown">
-                <NavDropdown.Item href="#action/3.1">Action</NavDropdown.Item>
-                <NavDropdown.Item href="#action/3.2">
-                  Another action
-                </NavDropdown.Item>
-                <NavDropdown.Item href="#action/3.3">
-                  Something
-                </NavDropdown.Item>
-                <NavDropdown.Divider />
-                <NavDropdown.Item href="#action/3.4">
-                  Separated link
-                </NavDropdown.Item>
-              </NavDropdown>
-            </Nav>
-          </Navbar.Collapse>
-        </Container>
-      </Navbar>
-    </>
+    <header className="p-3">
+      <div className="flex items-center justif-between">
+        <Link href="/" className="font-bold text-xl text-blue-600">
+          Book Easy
+        </Link>
+        <nav className=" hidden md:flex space-x-6 pl-10">
+          {navLinks.map((link) => (
+            <Link
+              key={link.href}
+              href={link.href}
+              className="hover:text-blue-600"
+            >
+              {link.label}
+            </Link>
+          ))}
+          {!user ? (
+            <>
+              <Link href="/auth/signup" className="hover:text-blue-600">
+                Sign Up
+              </Link>
+              <Link href="/auth/login" className="hover:text-blue-600">
+                Login
+              </Link>
+            </>
+          ) : (
+            <>
+              <span className="text-sm text-gray-200">
+                {user.displayName || user.email}
+              </span>
+              {user && (
+                <button
+                  onClick={handleLogout}
+                  className="text-sm bg-red-500 hover:bg-red-600 text-white px-4 py-1 rounded-md transition"
+                >
+                  Logout
+                </button>
+              )}
+            </>
+          )}
+        </nav>
+
+        {/* mobile view hamburger */}
+        <button
+          className="md:hidden focus:outline-none"
+          onClick={() => setMenuOpen((prev) => !prev)}
+          aria-label="Toggle Menu"
+        >
+          <svg
+            className="w-6 h-6"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            {menuOpen ? (
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M6 18L18 6M6 6l12 12"
+              />
+            ) : (
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M4 6h16M4 12h16M4 18h16"
+              />
+            )}
+          </svg>
+        </button>
+      </div>
+
+      {/* Mobile dropdown */}
+      <div
+        className={`md:hidden bg-white transition-all duration-300 ease-in-out ${
+          menuOpen
+            ? "max-h-96 opacity-100"
+            : "max-h-0 opacity-0 overflow-hidden"
+        }`}
+      >
+        <nav className="flex flex-col space-y-2 px-6 py-4">
+          {navLinks.map((link) => (
+            <a
+              key={link.href}
+              href={link.label}
+              className="px-4 py-2 rounded-md hover:text-blue-950"
+              onClick={() => setMenuOpen(false)} // Close after click
+            >
+              {link.label}
+            </a>
+          ))}
+        </nav>
+      </div>
+    </header>
   );
 }

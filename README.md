@@ -1,5 +1,6 @@
 # Booking App
 
+![alt text](background.webp)
 A full stack booking system built with Next.js, MongoDB, Firebase, and Tailwind CSS. Users can register, log in, and book appointments
 
 # Features

@@ -60,15 +60,19 @@ export default function SignupPage() {
   };
 
   return (
-    <div>
-      <h1>Create Account</h1>
-      <form onSubmit={handleSignup}>
+    <>
+      <form
+        onSubmit={handleSignup}
+        className="mx-auto h-48 flex flex-col h-screen space-y-4 iems-center mt-10 p-8 max-w-md rounded-lg bg-white shadow-lg"
+      >
+        <h1 className="text-2xl font-bold">Create Account</h1>
         <input
           type="text"
           placeholder="Enter username"
           value={username}
           onChange={(e) => setUsername(e.target.value)}
           required
+          className="w-full px-4 py-2 border border-gray-900 rounded"
         />
         <input
           type="email"
@@ -77,6 +81,7 @@ export default function SignupPage() {
           onChange={(e) => setEmail(e.target.value)}
           required
           autoComplete="email"
+          className="w-full px-4 py-2 border border-gray-900 rounded"
         />
         <input
           type="password"
@@ -85,15 +90,27 @@ export default function SignupPage() {
           onChange={(e) => setPassword(e.target.value)}
           required
           autoComplete="new-password"
+          className="w-full px-4 py-2 border border-gray-900 rounded"
         />
-        <button type="submit" disabled={loading}>
+        <button
+          type="submit"
+          disabled={loading}
+          className="bg-blue-600 hover:bg-blue-950 px-4 py-2"
+        >
           {loading ? "Signing Up..." : "Sign Up"}
         </button>
+        <button
+          onClick={handleGoogleSignup}
+          disabled={loading}
+          className="flex items-center justify-center gap-2 w-full max-w-xs border border-gray-300 rounded-md bg-white hover:bg-gray-50 px-4 py-2 shadow-sm disabled:opacity-50 disabled:cursor-not-allowed transition"
+        >
+          <span className="text-gray-700 font-medium text-sm">
+            {loading ? "Signing in..." : "Sign in with Google"}
+          </span>
+        </button>
       </form>
-      <button onClick={handleGoogleSignup} disabled={loading}>
-        {loading ? "Signing Up..." : "Sign Up"}
-      </button>
+
       {error && <p style={{ color: "red" }}>{error}</p>}
-    </div>
+    </>
   );
 }

@@ -61,9 +61,12 @@ export default function Login() {
     }
   };
   return (
-    <div>
-      <h1>Login</h1>
-      <form onSubmit={handleLogin}>
+    <>
+      <form
+        onSubmit={handleLogin}
+        className="mx-auto h-48 flex flex-col h-screen space-y-4 iems-center mt-10 p-8 max-w-md rounded-lg bg-white shadow-lg"
+      >
+        <h1 className="text-2xl font-bold">Login</h1>
         <input
           type="email"
           placeholder="example@email.com"
@@ -71,6 +74,7 @@ export default function Login() {
           onChange={(e) => setEmail(e.target.value)}
           required
           autoComplete="email"
+          className="px-4 py-2 border border-gray-900 rounded w-full"
         />
         <input
           type="password"
@@ -79,15 +83,27 @@ export default function Login() {
           onChange={(e) => setPassword(e.target.value)}
           required
           autoComplete="new-password"
+          className="px-4 py-2 border border-gray-900 rounded"
         />
-        <button type="submit" disabled={loading}>
+        <button
+          type="submit"
+          disabled={loading}
+          className="bg-blue-600 hover:bg-blue-950 px-4 py-2"
+        >
           {loading ? "Loging In..." : "Log In"}
         </button>
+        <button
+          onClick={handleGoogleSignin}
+          disabled={loading}
+          className="flex items-center justify-center gap-2 w-full max-w-xs border border-gray-300 rounded-md bg-white hover:bg-gray-50 px-4 py-2 shadow-sm disabled:opacity-50 disabled:cursor-not-allowed transition"
+        >
+          <span className="text-gray-700 font-medium text-sm">
+            {loading ? "Signing in..." : "Sign in with Google"}
+          </span>
+        </button>
       </form>
-      <button onClick={handleGoogleSignin} disabled={loading}>
-        {loading ? "Loging In..." : "Sign in with google"}
-      </button>
+
       {error && <p style={{ color: "red" }}>{error}</p>}
-    </div>
+    </>
   );
 }

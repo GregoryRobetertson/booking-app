@@ -31,17 +31,20 @@ export default function Header() {
   };
 
   return (
-    <header className="p-3">
-      <div className="flex items-center justif-between">
-        <Link href="/" className="font-bold text-xl text-blue-600">
+    <header className="p-4 shadow-sm bg-white">
+      <div className="max-w-7xl mx-auto flex items-center justify-between">
+        {/* Logo */}
+        <Link href="/" className="font-bold text-2xl text-blue-600">
           Book Easy
         </Link>
-        <nav className=" hidden md:flex space-x-6 pl-10">
+
+        {/* Desktop Nav */}
+        <nav className="hidden md:flex items-center space-x-6">
           {navLinks.map((link) => (
             <Link
               key={link.href}
               href={link.href}
-              className="hover:text-blue-600"
+              className="hover:text-blue-600 transition-colors"
             >
               {link.label}
             </Link>
@@ -57,29 +60,27 @@ export default function Header() {
             </>
           ) : (
             <>
-              <span className="text-sm text-black">
+              <span className="text-sm text-gray-800">
                 {user.displayName || user.email}
               </span>
-              {user && (
-                <button
-                  onClick={handleLogout}
-                  className="text-sm bg-red-500 hover:bg-red-600 text-white px-4 py-1 rounded-md transition"
-                >
-                  Logout
-                </button>
-              )}
+              <button
+                onClick={handleLogout}
+                className="text-sm bg-red-500 hover:bg-red-600 text-white px-4 py-1 rounded-md transition"
+              >
+                Logout
+              </button>
             </>
           )}
         </nav>
 
-        {/* mobile view hamburger */}
+        {/* Mobile Menu Button */}
         <button
           className="md:hidden focus:outline-none"
           onClick={() => setMenuOpen((prev) => !prev)}
           aria-label="Toggle Menu"
         >
           <svg
-            className="w-6 h-6"
+            className="w-6 h-6 text-gray-700"
             fill="none"
             stroke="currentColor"
             viewBox="0 0 24 24"
@@ -104,25 +105,58 @@ export default function Header() {
         </button>
       </div>
 
-      {/* Mobile dropdown */}
+      {/* Mobile Dropdown Nav */}
       <div
         className={`md:hidden bg-white transition-all duration-300 ease-in-out ${
           menuOpen
-            ? "max-h-96 opacity-100"
+            ? "max-h-96 opacity-100 py-4"
             : "max-h-0 opacity-0 overflow-hidden"
         }`}
       >
-        <nav className="flex flex-col space-y-2 px-6 py-4">
+        <nav className="flex flex-col space-y-3 px-6">
           {navLinks.map((link) => (
-            <a
+            <Link
               key={link.href}
-              href={link.label}
-              className="px-4 py-2 rounded-md hover:text-blue-950"
-              onClick={() => setMenuOpen(false)} // Close after click
+              href={link.href}
+              className="text-gray-800 hover:text-blue-600 transition"
+              onClick={() => setMenuOpen(false)}
             >
               {link.label}
-            </a>
+            </Link>
           ))}
+          {!user ? (
+            <>
+              <Link
+                href="/auth/signup"
+                className="hover:text-blue-600"
+                onClick={() => setMenuOpen(false)}
+              >
+                Sign Up
+              </Link>
+              <Link
+                href="/auth/login"
+                className="hover:text-blue-600"
+                onClick={() => setMenuOpen(false)}
+              >
+                Login
+              </Link>
+            </>
+          ) : (
+            <>
+              <span className="text-sm text-gray-800">
+                {user.displayName || user.email}
+              </span>
+              <button
+                onClick={() => {
+                  handleLogout();
+                  setMenuOpen(false);
+                }}
+                className="text-sm bg-red-500 hover:bg-red-600 text-white px-4 py-1 rounded-md transition"
+              >
+                Logout
+              </button>
+            </>
+          )}
         </nav>
       </div>
     </header>

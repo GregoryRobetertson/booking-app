@@ -4,11 +4,11 @@ const User = require("../models/User");
 const auth = async (req, res, next) => {
   const token = req.headers.authorization?.split(" ")[1];
   if (!token) {
-    res.status(401).json({ message: "No token provided" });
+    return res.status(401).json({ message: "No token provided" });
   }
 
   try {
-    const decoded = admin.auth().verifyIdToken(token);
+    const decoded = await admin.auth().verifyIdToken(token);
 
     const user = await User.findOne({ firebaseUid: decoded.uid });
     if (!user) {

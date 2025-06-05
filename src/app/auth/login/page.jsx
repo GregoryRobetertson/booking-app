@@ -49,7 +49,7 @@ export default function Login() {
       console.log("Google sign in: success", result.user);
       router.push("/");
       // Get the ID token from Firebase user
-      const token = await result.user.getIdToken();
+      const token = await result.user.getIdToken(true);
 
       // Save token to localStorage
       localStorage.setItem("token", token);

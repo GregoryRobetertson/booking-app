@@ -1,7 +1,6 @@
 "use client";
 import React, { useState } from "react";
 import axios from "axios";
-
 export default function BookingForm() {
   const [formData, setFormData] = useState({
     serviceType: "",
@@ -9,50 +8,33 @@ export default function BookingForm() {
     timeSlot: "",
     notes: "",
   });
-
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
-
   const handleChange = (e) => {
-    setFormData((prev) => ({
-      ...prev,
-      [e.target.name]: e.target.value,
-    }));
+    setFormData((prev) => ({ ...prev, [e.target.name]: e.target.value }));
   };
-
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
     setSuccess("");
-
     try {
-      const token = localStorage.getItem("token"); // get auth token
-
-      if (!token) {
+      const auth = getAuth();
+      const user = auth.currentUser;
+      if (!user) {
         setError("You must be logged in to book.");
         return;
       }
-
-      // Send POST request to backend
+      const token = await user.getIdToken(true);
       const response = await axios.post("/api/bookings", formData, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
+        headers: { Authorization: `Bearer ${token}` },
       });
-
       setSuccess("Booking created successfully!");
-      setFormData({
-        serviceType: "",
-        date: "",
-        timeSlot: "",
-        notes: "",
-      });
+      setFormData({ serviceType: "", date: "", timeSlot: "", notes: "" });
     } catch (err) {
       console.error(err);
       setError(err.response?.data?.message || "Failed to create booking");
     }
   };
-
   return (
     <div className="flex justify-center items-center min-h-screen  bg-gray-300 px-4">
       <form
@@ -84,7 +66,6 @@ export default function BookingForm() {
             className="w-full border rounded px-4 py-2 resize-none border-black"
           />
         </div>
-
         <div className="space-y-2">
           <label className="block  text-black font-medium">Time Slot</label>
           <input

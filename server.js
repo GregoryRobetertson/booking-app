@@ -3,6 +3,7 @@ const mongoose = require("mongoose");
 const dotenv = require("dotenv");
 const authRoutes = require("./src/server/routes/auth");
 const bookingRoutes = require("./src/server/routes/bookingRoutes");
+const { getMyBookings } = require("./src/server/controllers/bookingController");
 const cors = require("cors");
 dotenv.config();
 const app = express();
@@ -15,7 +16,7 @@ app.use(
     credentials: true, // if you use cookies or auth headers
   })
 );
-
+app.get("/my-bookings", getMyBookings);
 app.use("/api/auth", authRoutes);
 app.use("/api/bookings", bookingRoutes);
 

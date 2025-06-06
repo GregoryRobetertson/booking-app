@@ -9,7 +9,7 @@ const {
 const auth = require("../middleware/authMiddleware");
 
 router.post("/", auth, createBooking);
-router.get("/my-bookings", auth, getMyBookings);
+router.get("/my-bookings", getMyBookings);
 router.get("/:id", auth, getBookingsById);
 router.delete("/:id", auth, cancelBookings);
 

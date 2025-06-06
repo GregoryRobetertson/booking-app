@@ -3,9 +3,6 @@ import { getAuth, onAuthStateChanged, signOut } from "firebase/auth";
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
 import app from "../lib/firebase";
-
-const auth = getAuth(app);
-
 const navLinks = [
   { href: "#home", label: "Home" },
   { href: "/dashboard/book/booking-form", label: "Book Now" },
@@ -14,13 +11,13 @@ const navLinks = [
 export default function Header() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [user, setUser] = useState(null);
-
+  const auth = getAuth(app);
   useEffect(() => {
-    const auth = getAuth(app);
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       setUser(user);
     });
-  });
+    return () => unsubscribe();
+  }, []);
 
   const handleLogout = async () => {
     try {
@@ -78,6 +75,7 @@ export default function Header() {
           className="md:hidden focus:outline-none"
           onClick={() => setMenuOpen((prev) => !prev)}
           aria-label="Toggle Menu"
+          aria-expanded={menuOpen}
         >
           <svg
             className="w-6 h-6 text-gray-700"

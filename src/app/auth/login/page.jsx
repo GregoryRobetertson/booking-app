@@ -46,13 +46,9 @@ export default function Login() {
     setLoading(true);
     try {
       const result = await signInWithPopup(auth, googleProvider);
-      console.log("Google sign in: success", result.user);
+      const token = await user.getIdToken(true);
+      console.log("Token:", token);
       router.push("/");
-      // Get the ID token from Firebase user
-      const token = await result.user.getIdToken(true);
-
-      // Save token to localStorage
-      localStorage.setItem("token", token);
     } catch (error) {
       console.error("Error signing up:", error);
       setError(error.message);

@@ -3,6 +3,7 @@ const User = require("../models/User");
 
 const auth = async (req, res, next) => {
   const token = req.headers.authorization?.split(" ")[1];
+  console.log("🔐 Received token:", token);
   if (!token) {
     return res.status(401).json({ message: "No token provided" });
   }
@@ -12,7 +13,11 @@ const auth = async (req, res, next) => {
 
     const user = await User.findOne({ firebaseUid: decoded.uid });
     if (!user) {
-      return res.status(401).json({ message: "User not found" });
+      user = await User.create({
+        firebaseUid: decoded.uid,
+        email: decoded.email,
+        name: decoded.name || "Unnamed User",
+      });
     }
     req.user = user;
     next();

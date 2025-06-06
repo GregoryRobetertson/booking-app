@@ -10,6 +10,7 @@ const createBooking = async (req, res) => {
       return res
         .status(400)
         .json({ message: "Service type, date, and time slot are required" });
+      console.error("Error creating booking", error);
     }
 
     const booking = await Booking.create({

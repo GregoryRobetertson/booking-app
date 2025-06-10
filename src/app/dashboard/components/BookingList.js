@@ -9,7 +9,6 @@ export default function BookingList() {
   const [bookings, setBookings] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
-  const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
   useEffect(() => {
     const fetchBookings = async () => {
@@ -22,12 +21,9 @@ export default function BookingList() {
       try {
         const token = await user.getIdToken(true);
         console.log("Generated Token:", token);
-        const response = await axios.get(
-          `${API_URL}/api/bookings/my-bookings`,
-          {
-            headers: { Authorization: `Bearer ${token}` },
-          }
-        );
+        const response = await axios.get("/api/bookings/my-bookings", {
+          headers: { Authorization: `Bearer ${token}` },
+        });
 
         setBookings(response.data);
       } catch (err) {

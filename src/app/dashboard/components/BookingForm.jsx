@@ -28,8 +28,8 @@ export default function BookingForm() {
     }
     try {
       setLoading(true);
-      const token = await user.getIdToken(true);
-      const response = await axios.post(`${API_URL}/api/bookings`, formData, {
+      const token = await user.getIdToken(true); // always fresh
+      const response = await axios.post("/api/bookings", formData, {
         headers: { Authorization: `Bearer ${token}` },
       });
       setSuccess("Booking created successfully!");

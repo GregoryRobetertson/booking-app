@@ -34,7 +34,7 @@ const getMyBookings = async (req, res) => {
   try {
     console.log("User in request:", req.user);
 
-    const bookings = await Booking.find({ user: req.user._id });
+    const bookings = await Booking.find({ user: req.user.id });
 
     res.status(200).json(bookings);
   } catch (error) {

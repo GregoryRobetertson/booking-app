@@ -32,10 +32,13 @@ const createBooking = async (req, res) => {
 // @route Get /api/my-bookings
 const getMyBookings = async (req, res) => {
   try {
-    const bookings = await Booking.find({ user: req.user.id });
+    console.log("User in request:", req.user);
+
+    const bookings = await Booking.find({ user: req.user._id });
+
     res.status(200).json(bookings);
   } catch (error) {
-    console.error("Failed to find user bookings", error);
+    console.error("Error in getMyBookings:", error);
     res.status(500).json({ message: "Server Error" });
   }
 };

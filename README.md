@@ -1,6 +1,5 @@
 # Booking App
 
-![alt text](background.webp)
 A full stack booking system built with Next.js, MongoDB, Firebase, and Tailwind CSS. Users can register, log in, and book appointments
 
 # Features
@@ -41,3 +40,16 @@ Added the correct import:
 ```js
 import { NavDropdown } from "react-bootstrap";
 ```
+
+### Troubleshooting: CastError: Cast to ObjectId failed
+
+- If you hit a CastError like "Cast to ObjectId failed for value "..." (type string) at path "user" for model "Booking", it means Mongoose can't convert a string (like a Firebase UID) into a MongoDB ObjectId when it expects one.
+
+**The Fix:**
+
+Make sure you're always using the Mongoose \_id of the user document when you're creating or finding bookings. Don't use the Firebase UID string directly in fields defined as ObjectId in your Mongoose schemas.
+
+Here's where to check in your src/server/controllers/bookingController.js:
+
+createBooking: Use req.user.\_id (or req.user.id) for the user field.
+getMyBookings: Query by req.user.\_id for the user field.

@@ -20,8 +20,8 @@ export default function BookingList() {
 
       try {
         const token = await user.getIdToken(true);
-
-        const response = await axios.get("/api/bookings/my-bookings]", {
+        console.log("Generated Token:", token);
+        const response = await axios.get("/api/bookings/my-bookings", {
           headers: { Authorization: `Bearer ${token}` },
         });
 

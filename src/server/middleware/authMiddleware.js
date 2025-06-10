@@ -11,7 +11,7 @@ const auth = async (req, res, next) => {
   try {
     const decoded = await admin.auth().verifyIdToken(token);
 
-    const user = await User.findOne({ firebaseUid: decoded.uid });
+    let user = await User.findOne({ firebaseUid: decoded.uid });
     if (!user) {
       user = await User.create({
         firebaseUid: decoded.uid,

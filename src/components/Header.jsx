@@ -28,7 +28,7 @@ export default function Header() {
   };
 
   return (
-    <header className="p-4 shadow-sm bg-white">
+    <header className="p-4 shadow-sm bg-gray-300">
       <div className="max-w-7xl mx-auto flex items-center justify-between">
         {/* Logo */}
         <Link href="/" className="font-bold text-2xl text-blue-600">
